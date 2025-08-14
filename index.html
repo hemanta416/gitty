@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free IT Solutions</title>
+  <style>
+    body {
+      font-family: 'Fira Mono', 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #232526 0%, #414345 100%);
+      min-height: 100vh;
+      color: #e0e0e0;
+      cursor: pointer;
+      transition: background 1s;
+      overflow-x: hidden;
+    }
+    .it-bg {
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .it-logo {
+      position: absolute;
+      left: 50%;
+      top: 40px;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 0 40px #00fff2a0);
+      animation: floatLogo 6s infinite alternate;
+    }
+    @keyframes floatLogo {
+      0% { top: 40px; }
+      100% { top: 60px; }
+    }
+    .beam {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 80px;
+      background: radial-gradient(ellipse at center, rgba(0,255,255,0.18) 0%, rgba(255,255,255,0) 80%);
+      opacity: 0.7;
+      animation: beamGlow 2s infinite alternate;
+    }
+    @keyframes beamGlow {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    /* Animated floating binary code background */
+    .binary-bg {
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .binary {
+      position: absolute;
+      color: #00fff2;
+      font-size: 1.2em;
+      opacity: 0.15;
+      animation: binaryFloat 12s linear infinite;
+      font-family: 'Fira Mono', monospace;
+      user-select: none;
+    }
+    @keyframes binaryFloat {
+      0% { top: -40px; opacity: 0.15;}
+      80% { opacity: 0.18;}
+      100% { top: 100vh; opacity: 0;}
+    }
+    #navbar {
+      background: rgba(34,37,38,0.95);
+      backdrop-filter: blur(8px);
+      padding: 10px 0;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px #00fff230;
+      animation: fadeInDown 1.2s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    #navbar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    #navbar li {
+      margin: 0 18px;
+      animation: navPop 1.2s;
+    }
+    @keyframes navPop {
+      0% { opacity: 0; transform: scale(0.8);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    #navbar a {
+      text-decoration: none;
+      color: #00fff2;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      transition: color 0.3s, border-bottom 0.3s;
+      border-bottom: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    #navbar a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #00fff2, #ffb703);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+    #navbar a:hover::after, #navbar a.active::after {
+      transform: scaleX(1);
+    }
+    #navbar a:hover, #navbar a.active {
+      color: #ffb703;
+    }
+    .section {
+      padding: 40px 24px;
+      background: none;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px #00fff220;
+      margin: 120px auto 30px auto;
+      width: 95%;
+      max-width: 700px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 1s;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .logo-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 10px;
+      animation: logoBounce 1.2s;
+    }
+    @keyframes logoBounce {
+      0% { opacity: 0; transform: scale(0.8);}
+      80% { opacity: 1; transform: scale(1.08);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .logo-title img {
+      width: 48px;
+      height: 48px;
+      animation: rotateLight 3s infinite linear;
+      filter: drop-shadow(0 0 12px #00fff2a0);
+    }
+    @keyframes rotateLight {
+      0% { transform: rotate(-10deg);}
+      50% { transform: rotate(10deg);}
+      100% { transform: rotate(-10deg);}
+    }
+    .logo-title span {
+      font-size: 2.3em;
+      font-weight: bold;
+      color: #00fff2;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 8px #ffb70340;
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      margin: 32px 0 24px 0;
+    }
+    .feature-card {
+      background: #232526;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #00fff220;
+      padding: 24px 18px;
+      width: 200px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      z-index: 1;
+      border: 1px solid #00fff2;
+      animation: cardPop 1.2s;
+    }
+    @keyframes cardPop {
+      0% { opacity: 0; transform: scale(0.8);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .feature-card:hover {
+      transform: scale(1.07) translateY(-6px);
+      box-shadow: 0 6px 24px #ffb70340;
+      border-color: #ffb703;
+      animation: none;
+    }
+    .feature-card img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 2px 8px #00fff240);
+      animation: fadeIn 1.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    .feature-title {
+      font-size: 1.15em;
+      font-weight: bold;
+      color: #00fff2;
+      margin-bottom: 8px;
+      font-family: 'Fira Mono', monospace;
+      animation: textPop 1.2s;
+    }
+    @keyframes textPop {
+      0% { opacity: 0; transform: scale(0.8);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .feature-desc {
+      font-size: 15px;
+      color: #e0e0e0;
+      font-family: 'Fira Mono', monospace;
+      animation: textPop 1.2s;
+    }
+    .cta-btn {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 14px 38px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #232526;
+      background: linear-gradient(90deg, #00fff2 60%, #ffb703 100%);
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px #00fff240;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      text-decoration: none;
+      letter-spacing: 1px;
+      animation: btnPop 1.2s;
+    }
+    @keyframes btnPop {
+      0% { opacity: 0; transform: scale(0.8);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .cta-btn:hover {
+      background: linear-gradient(90deg, #ffb703 60%, #00fff2 100%);
+      transform: scale(1.08);
+      color: #fff;
+    }
+    .contact-info {
+      margin-top: 32px;
+      font-size: 16px;
+      color: #00fff2;
+      font-family: 'Fira Mono', monospace;
+      animation: fadeInUp 1.2s;
+    }
+    .contact-info a {
+      color: #ffb703;
+      text-decoration: underline;
+      margin-left: 8px;
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .features {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      .feature-card {
+        width: 90%;
+        max-width: 320px;
+      }
+      .section {
+        margin: 100px 8px 20px 8px;
+        padding: 18px 6px;
+      }
+    }
+    /* Console style for service page */
+    .console-box {
+      background: #181818;
+      color: #00fff2;
+      font-family: 'Fira Mono', monospace;
+      border-radius: 10px;
+      padding: 24px;
+      margin: 24px auto;
+      max-width: 600px;
+      box-shadow: 0 2px 16px #00fff220;
+      text-align: left;
+      font-size: 1.1em;
+      position: relative;
+      animation: fadeInUp 1.2s;
+    }
+    .console-title {
+      color: #ffb703;
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      animation: textPop 1.2s;
+    }
+    .console-cmd {
+      color: #fff;
+      font-weight: bold;
+      animation: textPop 1.2s;
+    }
+    .console-output {
+      color: #00fff2;
+      margin-left: 18px;
+      animation: textPop 1.2s;
+    }
+    .console-web {
+      color: #fff;
+      background: #232526;
+      padding: 8px 14px;
+      border-radius: 6px;
+      margin: 8px 0;
+      display: inline-block;
+      font-size: 1em;
+      box-shadow: 0 2px 8px #00fff220;
+      animation: fadeInUp 1.2s;
+    }
+    /* Animated scroll indicator */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      animation: bounceScroll 1.5s infinite;
+      opacity: 0.7;
+    }
+    @keyframes bounceScroll {
+      0%,100% { transform: translateX(-50%) translateY(0);}
+      50% { transform: translateX(-50%) translateY(12px);}
+    }
+    .keyboard-bg {
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .keyboard-keys {
+      position: absolute;
+      left: 50%;
+      top: 60vh;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      opacity: 0.18;
+      animation: keyboardFadeIn 1.5s;
+    }
+    @keyframes keyboardFadeIn {
+      from { opacity: 0; transform: translateX(-50%) scale(0.8);}
+      to { opacity: 0.18; transform: translateX(-50%) scale(1);}
+    }
+    .keyboard-key {
+      background: #232526;
+      color: #00fff2;
+      border: 2px solid #00fff2;
+      border-radius: 6px;
+      width: 32px;
+      height: 38px;
+      font-size: 1.2em;
+      font-family: 'Fira Mono', monospace;
+      text-align: center;
+      line-height: 38px;
+      box-shadow: 0 2px 8px #00fff220;
+      opacity: 0.7;
+      margin: 0 2px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .keyboard-key.active {
+      background: #00fff2;
+      color: #232526;
+      opacity: 1;
+      box-shadow: 0 0 16px #00fff2a0;
+      animation: keyPress 0.25s;
+    }
+    .modal-keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .modal-keyboard-key {
+      background: #232526;
+      color: #00fff2;
+      border: 2px solid #00fff2;
+      border-radius: 6px;
+      width: 32px;
+      height: 38px;
+      font-size: 1.2em;
+      font-family: 'Fira Mono', monospace;
+      text-align: center;
+      line-height: 38px;
+      box-shadow: 0 2px 8px #00fff220;
+      opacity: 0.13;
+      margin: 0 2px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal-keyboard-key.active {
+      background: #00fff2;
+      color: #232526;
+      opacity: 0.7;
+      box-shadow: 0 0 16px #00fff2a0;
+      animation: keyPress 0.25s;
+    }
+  </style>
+</head>
+<body>
+  <!-- Language Switcher -->
+  <div style="position:fixed;top:16px;right:24px;z-index:20;">
+    <button id="lang-eng" class="cta-btn" style="padding:6px 18px;font-size:1em;">English</button>
+    <button id="lang-jp" class="cta-btn" style="padding:6px 18px;font-size:1em;">日本語</button>
+  </div>
+  <div class="it-bg">
+    <div class="beam"></div>
+    <svg class="it-logo" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="50" fill="#232526" stroke="#00fff2" stroke-width="6"/>
+      <rect x="40" y="30" width="40" height="60" rx="12" fill="#181818" stroke="#ffb703" stroke-width="3"/>
+      <text x="60" y="70" text-anchor="middle" font-size="32" fill="#00fff2" font-family="Fira Mono, monospace">IT</text>
+    </svg>
+  </div>
+  <div class="binary-bg" id="binary-bg"></div>
+  <div class="scroll-indicator">
+    <svg width="40" height="40" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="#00fff2" stroke-width="2"/>
+      <polyline points="12,18 20,28 28,18" fill="none" stroke="#ffb703" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="keyboard-bg" id="keyboard-bg"></div>
+  <nav id="navbar">
+    <ul>
+      <li>
+        <a href="#" onclick="showSection('home')" id="nav-home" class="active">
+          <span class="eng">Home</span>
+          <span class="jp" style="display:none;">ホーム</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('services')" id="nav-services">
+          <span class="eng">Services</span>
+          <span class="jp" style="display:none;">サービス</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('projects')" id="nav-projects">
+          <span class="eng">Projects</span>
+          <span class="jp" style="display:none;">プロジェクト</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('contact')" id="nav-contact">
+          <span class="eng">Contact</span>
+          <span class="jp" style="display:none;">連絡先</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="home-section" class="section">
+    <div class="logo-title">
+      <img src="https://cdn-icons-png.flaticon.com/512/1055/1055672.png" alt="IT Logo">
+      <span class="eng">Free IT Solutions</span>
+      <span class="jp" style="display:none;">Free IT Solutions</span>
+    </div>
+    <p class="eng" style="font-size:1.2em; margin-bottom:18px;">
+      Free IT Solutions: Integrated solutions for your digital future.<br>
+      Websites, applications, cloud, and IT services.
+    </p>
+    <p class="jp" style="font-size:1.2em; margin-bottom:18px;display:none;">
+      Free IT Solutions:あなたのデジタル未来のための統合ソリューション。<br>
+      ウェブサイト、アプリケーション、クラウド、ITサービス。
+    </p>
+    <div class="features">
+      <div class="feature-card" id="web-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055672.png" alt="Web">
+        <div class="feature-title eng">Web Development</div>
+        <div class="feature-title jp" style="display:none;">ウェブ開発</div>
+        <div class="feature-desc eng">React, Node.js, HTML, CSS, JS</div>
+        <div class="feature-desc jp" style="display:none;">React、Node.js、HTML、CSS、JS</div>
+      </div>
+      <div class="feature-card" id="console-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="Console">
+        <div class="feature-title eng">IT Console</div>
+        <div class="feature-title jp" style="display:none;">ITコンソール</div>
+        <div class="feature-desc eng">Server, Database, Cloud Management</div>
+        <div class="feature-desc jp" style="display:none;">サーバー、データベース、クラウド管理</div>
+      </div>
+      <div class="feature-card" id="create-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055681.png" alt="Create">
+        <div class="feature-title eng">Create Project</div>
+        <div class="feature-title jp" style="display:none;">プロジェクト作成</div>
+        <div class="feature-desc eng">Business Website, Portal, Application</div>
+        <div class="feature-desc jp" style="display:none;">ビジネスウェブサイト、ポータル、アプリケーション</div>
+      </div>
+    </div>
+    <a href="mailto:hemat123ham@gmail.com" class="cta-btn eng">Get Consultation</a>
+    <a href="mailto:hemat123ham@gmail.com" class="cta-btn jp" style="display:none;">ご相談はこちら</a>
+    <div class="contact-info eng">
+      <strong>Contact:</strong> hemat123ham@gmail.com | <a href="tel:+9779821949849">+977-9821949849</a>
+    </div>
+    <div class="contact-info jp" style="display:none;">
+      <strong>連絡先:</strong> hemat123ham@gmail.com | <a href="tel:+9779821949849">+977-9821949849</a>
+    </div>
+  </div> 
+  
+
+  <div id="services-section" class="section" style="display:none;">
+    <div class="logo-title">
+      <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="Services">
+      <span class="jp">ITサービス</span>
+      <span class="eng" style="display:none;">IT Services</span>
+    </div>
+    <div class="console-box" id="animated-console">
+      <div class="console-title jp">ITサービスとウェブ開発</div>
+      <div class="console-title eng" style="display:none;">IT Services & Web Development</div>
+      <div class="console-cmd">> npm create web-app</div>
+      <div class="console-output jp">✔ ウェブアプリケーションが正常に作成されました</div>
+      <div class="console-output eng" style="display:none;">✔ Web application created successfully</div>
+      <div class="console-cmd">> git push origin main</div>
+      <div class="console-output jp">✔ コードがGitHubにプッシュされました</div>
+      <div class="console-output eng" style="display:none;">✔ Code pushed to GitHub</div>
+      <div class="console-cmd">> node server.js</div>
+      <div class="console-output jp">✔ サーバーが稼働中です</div>
+      <div class="console-output eng" style="display:none;">✔ Server is running</div>
+      <div class="console-web">https://hemant.com</div>
+    </div>
+    <div class="features">
+      <div class="feature-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="Console">
+        <div class="feature-title jp">ITコンソール</div>
+        <div class="feature-title eng" style="display:none;">IT Console</div>
+        <div class="feature-desc jp">サーバー、データベース、クラウド管理</div>
+        <div class="feature-desc eng" style="display:none;">Server, Database, Cloud Management</div>
+      </div>
+      <div class="feature-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055672.png" alt="Web">
+        <div class="feature-title jp">ウェブ開発</div>
+        <div class="feature-title eng" style="display:none;">Web Development</div>
+        <div class="feature-desc jp">React、Node.js、HTML、CSS、JS</div>
+        <div class="feature-desc eng" style="display:none;">React, Node.js, HTML, CSS, JS</div>
+      </div>
+      <div class="feature-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055681.png" alt="Create">
+        <div class="feature-title jp">プロジェクト作成</div>
+        <div class="feature-title eng" style="display:none;">Create Project</div>
+        <div class="feature-desc jp">ビジネスウェブサイト、ポータル、アプリケーション</div>
+        <div class="feature-desc eng" style="display:none;">Business Website, Portal, Application</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="projects-section" class="section" style="display:none;">
+    <div class="logo-title">
+      <img src="https://cdn-icons-png.flaticon.com/512/1055/1055681.png" alt="Projects">
+      <span class="jp">プロジェクト</span>
+      <span class="eng" style="display:none;">Projects</span>
+    </div>
+    <div class="features">
+      <div class="feature-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055672.png" alt="WebApp">
+        <div class="feature-title jp">ウェブアプリケーション</div>
+        <div class="feature-title eng" style="display:none;">Web Application</div>
+        <div class="feature-desc jp">ブトワルポータル、ECサイト、ブログ</div>
+        <div class="feature-desc eng" style="display:none;">free Portal, E-commerce, Blog</div>
+      </div>
+      <div class="feature-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="Cloud">
+        <div class="feature-title jp">クラウドサービス</div>
+        <div class="feature-title eng" style="display:none;">Cloud Service</div>
+        <div class="feature-desc jp">AWS、Azure、DigitalOcean</div>
+        <div class="feature-desc eng" style="display:none;">AWS, Azure, DigitalOcean</div>
+      </div>
+      <div class="feature-card">
+        <img src="https://cdn-icons-png.flaticon.com/512/1055/1055681.png" alt="Mobile">
+        <div class="feature-title jp">モバイルアプリ</div>
+        <div class="feature-title eng" style="display:none;">Mobile App</div>
+        <div class="feature-desc jp">React Native、Flutter</div>
+        <div class="feature-desc eng" style="display:none;">React Native, Flutter</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="contact-section" class="section" style="display:none;">
+    <div class="logo-title">
+      <img src="https://cdn-icons-png.flaticon.com/512/1055/1055672.png" alt="Contact">
+      <span class="jp">連絡先</span>
+      <span class="eng" style="display:none;">Contact</span>
+    </div>
+    <div class="contact-info jp" style="font-size:1.2em;">
+      <div style="font-weight:bold; color:#00fff2; margin-bottom:6px;">hemant ghimire</div><br>
+      <strong>メール:</strong> <a href="mailto:hemat123ham@gmail.com">hemat123ham@gmail.com</a><br><br>
+      <strong>電話:</strong> <a href="tel:+9779821949849">+977-9821949849</a><br><br>
+      <strong>住所:</strong> 東京, 日本
+    </div>
+    <div class="contact-info eng" style="font-size:1.2em; display:none;">
+      <div style="font-weight:bold; color:#00fff2; margin-bottom:6px;"> hemant ghimire</div><br>
+      <strong>Email:</strong> <a href="mailto:hemat123ham@gmail.com">hemat123ham@gmail.com</a><br><br>
+      <strong>Phone:</strong> <a href="tel:+9779821949849">+977-9821949849</a><br> <br>
+      <strong>Address:</strong> tokyo , japan
+    </div>
+    <a href="mailto:hemat123ham@gmail.com" class="cta-btn jp" style="margin-top:24px;">お問い合わせ</a>
+    <a href="mailto:hemat123ham@gmail.com" class="cta-btn eng" style="margin-top:24px; display:none;">Send Inquiry</a>
+  </div>
+
+  <!-- Add modal for briefings with animated keyboard background inside modal -->
+  <!-- Make modal background a full keyboard layout -->
+  <div id="brief-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(34,37,38,0.92); z-index:200; align-items:center; justify-content:center;">
+    <div id="brief-modal-content" style="background:transparent; border-radius:16px; padding:0; max-width:90vw; max-height:80vh; position:relative; text-align:left; color:#e0e0e0; box-shadow:none; overflow:hidden;">
+      <!-- Full keyboard background inside modal -->
+      <div id="modal-keyboard-bg" style="position:absolute; left:0; top:0; width:100vw; height:100vh; z-index:0; pointer-events:none;"></div>
+      <div style="position:relative; z-index:2; background:#232526cc; border-radius:16px; margin:48px auto; max-width:600px; padding:32px 24px; box-shadow:0 2px 24px #00fff240;">
+        <span id="brief-close" style="position:absolute; top:16px; right:24px; font-size:2em; cursor:pointer; color:#ffb703; z-index:2;">&times;</span>
+        <div id="brief-title" style="font-size:1.5em; font-weight:bold; color:#00fff2; margin-bottom:18px;"></div>
+        <div id="brief-content" style="font-size:1.1em; line-height:1.7;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Animated binary code background
+    function createBinaryBg() {
+      const binaryBg = document.getElementById('binary-bg');
+      binaryBg.innerHTML = '';
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      for(let i=0; i<30; i++) {
+        const span = document.createElement('span');
+        span.className = 'binary';
+        span.style.left = Math.random() * (width - 40) + 'px';
+        span.style.top = (-Math.random()*100) + 'px';
+        span.style.fontSize = (Math.random()*1.2+1) + 'em';
+        span.style.animationDelay = (Math.random()*8) + 's';
+        span.textContent = Math.random() > 0.5 ? '010101' : '101010';
+        binaryBg.appendChild(span);
+      }
+    }
+    createBinaryBg();
+    window.addEventListener('resize', createBinaryBg);
+
+    // Animated console typing effect
+    function animateConsole() {
+      const box = document.getElementById('animated-console');
+      const cmds = box.querySelectorAll('.console-cmd');
+      const outputs = box.querySelectorAll('.console-output');
+      let i = 0;
+      function showLine() {
+        if(i < cmds.length) {
+          cmds[i].style.opacity = '1';
+          outputs[i*2].style.opacity = '1';
+          outputs[i*2+1].style.opacity = '1';
+          setTimeout(showLine, 900);
+          i++;
+        }
+      }
+      cmds.forEach(e => e.style.opacity = '0');
+      outputs.forEach(e => e.style.opacity = '0');
+      setTimeout(showLine, 700);
+    }
+    document.addEventListener('DOMContentLoaded', animateConsole);
+
+    // Card hover animation (pulse)
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.animation = 'cardPop 0.5s';
+        card.style.boxShadow = '0 0 32px #00fff2a0';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.animation = 'cardPop 1.2s';
+        card.style.boxShadow = '0 2px 12px #00fff220';
+      });
+    });
+
+    // Card click animation (pop and modal)
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.addEventListener('click', function() {
+        card.style.transform = 'scale(1.12)';
+        card.style.transition = 'transform 0.2s';
+        setTimeout(() => {
+          card.style.transform = '';
+          card.style.transition = '';
+        }, 300);
+      });
+    });
+
+    // Section switching logic
+    document.addEventListener('DOMContentLoaded', function() {
+      window.showSection = function(section) {
+        document.querySelectorAll('.section').forEach(div => div.style.display = 'none');
+        document.querySelectorAll('#navbar a').forEach(a => a.classList.remove('active'));
+        if(section === 'home') {
+          document.getElementById('home-section').style.display = '';
+          document.getElementById('nav-home').classList.add('active');
+        } else if(section === 'services') {
+          document.getElementById('services-section').style.display = '';
+          document.getElementById('nav-services').classList.add('active');
+          animateConsole();
+        } else if(section === 'projects') {
+          document.getElementById('projects-section').style.display = '';
+          document.getElementById('nav-projects').classList.add('active');
+        } else if(section === 'contact') {
+          document.getElementById('contact-section').style.display = '';
+          document.getElementById('nav-contact').classList.add('active');
+        }
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      };
+      showSection('home');
+    });
+
+    // Language switch logic
+    document.getElementById('lang-eng').onclick = function() {
+      document.querySelectorAll('.eng').forEach(e => e.style.display = '');
+      document.querySelectorAll('.jp').forEach(e => e.style.display = 'none');
+      document.querySelectorAll('.console-output').forEach((e,i) => { if(i%2===1) e.style.display=''; else e.style.display='none'; });
+      document.querySelectorAll('.console-title.eng').forEach(e => e.style.display = '');
+      document.querySelectorAll('.console-title.jp').forEach(e => e.style.display = 'none');
+    };
+    document.getElementById('lang-jp').onclick = function() {
+      document.querySelectorAll('.eng').forEach(e => e.style.display = 'none');
+      document.querySelectorAll('.jp').forEach(e => e.style.display = '');
+      document.querySelectorAll('.console-output').forEach((e,i) => { if(i%2===0) e.style.display='none'; else e.style.display=''; });
+      document.querySelectorAll('.console-title.eng').forEach(e => e.style.display = 'none');
+      document.querySelectorAll('.console-title.jp').forEach(e => e.style.display = '');
+    };
+
+    // Briefing content for each card (English/Japanese)
+    const briefings = {
+      web: {
+        eng: {
+          title: "Web Development",
+          content: "We use React, Node.js, HTML, CSS, and JavaScript for web development. We build modern, secure, and fast websites and web applications for your business."
+        },
+        jp: {
+          title: "ウェブ開発",
+          content: "React、Node.js、HTML、CSS、JavaScriptを使ったウェブ開発。最新で安全、そして高速なウェブサイトやウェブアプリケーションを構築します。"
+        }
+      },
+      console: {
+        eng: {
+          title: "IT Console",
+          content: "IT Console includes server management, database, cloud services, and DevOps solutions. Our goal is to make your systems secure and scalable."
+        },
+        jp: {
+          title: "ITコンソール",
+          content: "ITコンソールにはサーバー管理、データベース、クラウドサービス、DevOpsソリューションが含まれます。システムを安全かつスケーラブルにします。"
+        }
+      },
+      create: {
+        eng: {
+          title: "Create Project",
+          content: "We offer business websites, portals, mobile applications, and other digital solutions. Custom project development as per your requirements."
+        },
+        jp: {
+          title: "プロジェクト作成",
+          content: "ビジネスウェブサイト、ポータル、モバイルアプリなどのデジタルソリューションを提供します。ご要望に合わせたカスタムプロジェクト開発も可能です。"
+        }
+      },
+      webapp: {
+        eng: {
+          title: "Web Application",
+          content: "Development and management of web applications like Butwal Portal, E-commerce, Blog, and more."
+        },
+        jp: {
+          title: "ウェブアプリケーション",
+          content: "ブトワルポータル、ECサイト、ブログなどのウェブアプリケーションの開発・管理。"
+        }
+      },
+      cloud: {
+        eng: {
+          title: "Cloud Service",
+          content: "Hosting, deployment, and cloud solutions on platforms like AWS, Azure, DigitalOcean."
+        },
+        jp: {
+          title: "クラウドサービス",
+          content: "AWS、Azure、DigitalOceanなどのプラットフォームでのホスティング、デプロイ、クラウドソリューション。"
+        }
+      },
+      mobile: {
+        eng: {
+          title: "Mobile App",
+          content: "Android and iOS mobile app development using React Native and Flutter."
+        },
+        jp: {
+          title: "モバイルアプリ",
+          content: "React NativeやFlutterを使ったAndroid・iOSモバイルアプリ開発。"
+        }
+      }
+    };
+
+    // Show briefing modal
+    function showBrief(type) {
+      const isJapanese = document.querySelector('.jp').style.display !== 'none';
+      const data = briefings[type][isJapanese ? 'jp' : 'eng'];
+      document.getElementById('brief-title').innerText = data.title;
+      document.getElementById('brief-content').innerText = data.content;
+      document.getElementById('brief-modal').style.display = 'flex';
+      createModalKeyboardBg(); // Add keyboard animation to modal
+      // Modal animation
+      const modal = document.getElementById('brief-modal-content');
+      modal.style.transform = 'scale(0.8)';
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.transform = 'scale(1)';
+        modal.style.opacity = '1';
+        modal.style.transition = 'all 0.3s cubic-bezier(.68,-0.55,.27,1.55)';
+      }, 10);
+    }
+
+    // Close modal on close button or clicking outside modal content
+    document.getElementById('brief-close').onclick = closeBriefModal;
+    document.getElementById('brief-modal').onclick = function(e) {
+      if (e.target === this) closeBriefModal();
+    };
+    function closeBriefModal() {
+      const modal = document.getElementById('brief-modal-content');
+      modal.style.transform = 'scale(0.8)';
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('brief-modal').style.display = 'none';
+        modal.style.transform = '';
+        modal.style.opacity = '';
+        modal.style.transition = '';
+        // Remove modal keyboard interval
+        if(window.modalKbInterval) clearInterval(window.modalKbInterval);
+      }, 900);
+    }
+
+    // Full keyboard layout for modal background
+    function createModalKeyboardBg() {
+      const modalKeyboardBg = document.getElementById('modal-keyboard-bg');
+      modalKeyboardBg.innerHTML = '';
+      // QWERTY layout
+      const rows = [
+        ['Q','W','E','R','T','Y','U','I','O','P'],
+        ['A','S','D','F','G','H','J','K','L'],
+        ['Z','X','C','V','B','N','M']
+      ];
+      let keyIds = [];
+      rows.forEach((row, rIdx) => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'modal-keyboard-row';
+        rowDiv.style.marginTop = (rIdx === 0 ? '60px' : '0');
+        row.forEach((k, kIdx) => {
+          const keyDiv = document.createElement('div');
+          keyDiv.className = 'modal-keyboard-key';
+          keyDiv.textContent = k;
+          keyDiv.id = `modal-kb-key-${rIdx}-${kIdx}`;
+          keyIds.push(keyDiv.id);
+          rowDiv.appendChild(keyDiv);
+        });
+        modalKeyboardBg.appendChild(rowDiv);
+      });
+
+      // Animate keys one by one
+      let flatKeys = keyIds;
+      let kbIndex = 0;
+      if(window.modalKbInterval) clearInterval(window.modalKbInterval);
+      window.modalKbInterval = setInterval(() => {
+        flatKeys.forEach(id => {
+          const el = document.getElementById(id);
+          if(el) el.classList.remove('active');
+        });
+        const el = document.getElementById(flatKeys[kbIndex]);
+        if(el) el.classList.add('active');
+        kbIndex = (kbIndex + 1) % flatKeys.length;
+      }, 200);
+    }
+
+    // Add click events to all feature cards (home, services, projects)
+    document.getElementById('web-card').onclick = function() { showBrief('web'); };
+    document.getElementById('console-card').onclick = function() { showBrief('console'); };
+    document.getElementById('create-card').onclick = function() { showBrief('create'); };
+
+    // Services section
+    document.querySelectorAll('#services-section .feature-card')[0].onclick = function() { showBrief('console'); };
+    document.querySelectorAll('#services-section .feature-card')[1].onclick = function() { showBrief('web'); };
+    document.querySelectorAll('#services-section .feature-card')[2].onclick = function() { showBrief('create'); };
+
+    // Projects section
+    document.querySelectorAll('#projects-section .feature-card')[0].onclick = function() { showBrief('webapp'); };
+    document.querySelectorAll('#projects-section .feature-card')[1].onclick = function() { showBrief('cloud'); };
+    document.querySelectorAll('#projects-section .feature-card')[2].onclick = function() { showBrief('mobile'); };
+  </script>
+</body>
+</html>
